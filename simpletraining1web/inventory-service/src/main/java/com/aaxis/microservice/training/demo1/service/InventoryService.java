@@ -6,6 +6,7 @@ import com.aaxis.microservice.training.demo1.domain.Inventory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
@@ -22,6 +23,7 @@ public class InventoryService {
         mInventoryDAO.addItemInventory();
     }
 
+    @Cacheable(value = "inventory", key = "'inventory'.concat(#pProductId)")
     public Inventory findInventoryById(String pProductId){
         logger.debug("Query inventory by product id: {}", pProductId);
         Optional<Inventory> optionalInventory = mInventoryDAO.findById(pProductId);

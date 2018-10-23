@@ -5,6 +5,7 @@ import com.aaxis.microservice.training.demo1.domain.ItemPrice;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
@@ -17,6 +18,7 @@ public class ItemPriceService {
 
     private static final Logger logger = LoggerFactory.getLogger(ItemPriceService.class);
 
+    @Cacheable(value = "price", key = "'price'.concat(#pProductId)")
     public ItemPrice findItemPriceById(String pProductId){
         logger.debug("Query price by product id: {}", pProductId);
         Optional<ItemPrice> optionalItemPrice = mItemPriceDAO.findById(pProductId);

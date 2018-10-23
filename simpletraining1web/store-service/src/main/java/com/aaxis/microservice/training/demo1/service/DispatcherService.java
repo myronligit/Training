@@ -34,7 +34,7 @@ public class DispatcherService {
             @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "50"),
             @HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "30000"),
             @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "1000")
-    }, threadPoolKey = "hello4ThreadPool", threadPoolProperties = {
+    }, threadPoolKey = "priceThreadPool", threadPoolProperties = {
             @HystrixProperty(name = "coreSize", value = "3")
     })
     public double getPriceFromService(String pProductId){
@@ -46,7 +46,7 @@ public class DispatcherService {
             @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "50"),
             @HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "30000"),
             @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "1000")
-    }, threadPoolKey = "hello4ThreadPool", threadPoolProperties = {
+    }, threadPoolKey = "inventoryThreadPool", threadPoolProperties = {
             @HystrixProperty(name = "coreSize", value = "3")
     })
     public int getInventoryFromService(String pProductId){

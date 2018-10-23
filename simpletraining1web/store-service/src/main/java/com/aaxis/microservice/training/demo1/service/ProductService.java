@@ -19,7 +19,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.querydsl.QSort;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -43,9 +42,6 @@ public class ProductService {
 
     @Autowired
     private RestTemplate restTemplate;
-
-    @Autowired
-    private RedisTemplate redisTemplate;
 
     @Autowired
     private DispatcherService dispatcherService;
@@ -194,44 +190,12 @@ public class ProductService {
     }
 
     public double getProductPrice(String pProductId) {
-        boolean redisBorken = false;
-        try {
-            if (redisTemplate.hasKey(PRICE_CACHE_KEY_PREFIX + pProductId)) {
-                logger.debug("Achieve the price from cache for product {}", pProductId);
-                Object object = redisTemplate.opsForValue().get(PRICE_CACHE_KEY_PREFIX + pProductId);
-                return (Double) object;
-            }
-        } catch (Exception e) {
-            redisBorken = true;
-            logger.error("Occured error when acheive price cache from redis : ", e);
-        }
-
-        logger.debug("Achieve the price from service for product {}", pProductId);
         Double price = dispatcherService.getPriceFromService(pProductId);
-        if (!redisBorken) {
-            redisTemplate.opsForValue().set(PRICE_CACHE_KEY_PREFIX + pProductId, price);
-        }
         return price;
     }
 
     public int getProductInventory(String pProductId) {
-        boolean redisBorken = false;
-        try {
-            if (redisTemplate.hasKey(INVENTORY_CACHE_KEY_PREFIX + pProductId)) {
-                logger.debug("Achieve the inventory from cache");
-                Object object = redisTemplate.opsForValue().get(INVENTORY_CACHE_KEY_PREFIX + pProductId);
-                return (Integer) object;
-            }
-        } catch (Exception e) {
-            redisBorken = true;
-            logger.error("Occured error when acheive inventory cache from redis : ", e);
-        }
-
-        logger.debug("Achieve the inventory from service for product {}", pProductId);
         Integer stock = dispatcherService.getInventoryFromService(pProductId);
-        if (!redisBorken) {
-            redisTemplate.opsForValue().set(INVENTORY_CACHE_KEY_PREFIX + pProductId, stock);
-        }
         return stock;
     }
 
